@@ -45,3 +45,53 @@ Uso:
 ```julia
 4 * direct_pi(1000)/1000
 ```
+
+### Muestro por cadenas de Markov ###
+
+Se inicia en la casa-club. Los adultos juegan
+en un **área mayor** que en la
+que juegan los niños, por lo que ahora las reglas del 
+juego cambian. Se lanza una piedra. Se toma una nueva y se vuelve a 
+lanzar (aleatoriamente). Si la piedra se sale del área se 
+pone una nueva sobre la que estaba anteriormente y se lanza una nueva.
+
+Según el programa sólo una persona lanza. Tiene que intentar $N$ 
+lanzamientos.
+
+
+```julia
+function markov_pi(N)
+    x = 1
+    y = 1
+    Nh = 0
+    for i in 1:N
+        dx = rand(linspace(-1,1,400))
+        dy = rand(linspace(-1,1,400))
+        if abs(x+dx) < 1. && abs(y+dy) < 1.
+            x += dx
+            y += dy
+        end
+        if x^2 + y^2 <= 1
+            Nh += 1
+        end
+    end
+    Nh
+end
+```
+
+Observación, `dx` y `dy` no se deben hacer muy pequeñas
+ya que de otra manera la *aceptación* es alta y si es
+muy alta, es más fácil que se salgan. Se debe hacer
+de forma que **la mitad se acepte** y la otra
+se rechace.
+
+**Definición**. Una cadena de Markov: La probabilidad
+de generar la configuración $i+1$ sólo depende en la 
+configuración anterior, $i$, y no en las anteriores.
+
+El problema con el muestreo usando la cadena de Markov
+es que depende de condiciones iniciales y la correlación:
+el tiempo en que la configuración se acuerda de dónde vino
+(la casa-club).
+
+Nos quedamos en la aguja de Buffon.
